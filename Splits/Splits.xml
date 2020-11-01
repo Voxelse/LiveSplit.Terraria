@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Splits>
+  <Split name="Bosses" text="Bosses">
+    <Split name="Boss_EyeofCthulhu" text="Eye of Cthulhu"/>
+    <Split name="Boss_KingSlime" text="King Slime"/>
+    <Split name="Boss_EaterofWorldsBrainofCthulhu" text="Eater of Worlds / Brain of Cthulhu"/>
+    <Split name="Boss_Skeletron" text="Skeletron"/>
+    <Split name="Boss_QueenBee" text="Queen Bee"/>
+    <Split name="WallofFlesh" text="Wall of Flesh"/>
+    <Split name="Boss_QueenSlime" text="Queen Slime"/>
+    <Split name="Boss_TheDestroyer" text="The Destroyer"/>
+    <Split name="Boss_TheTwins" text="The Twins"/>
+    <Split name="Boss_SkeletronPrime" text="Skeletron Prime"/>
+    <Split name="Boss_Plantera" text="Plantera"/>
+    <Split name="Boss_Golem" text="Golem"/>
+    <Split name="Boss_DukeFishron" text="Duke Fishron"/>
+    <Split name="Boss_EmpressofLight" text="Empress of Light"/>
+    <Split name="Boss_LunaticCultist" text="Lunatic Cultist"/>
+    <Split name="Boss_NebulaPillar" text="Nebula Pillar"/>
+    <Split name="Boss_SolarPillar" text="Solar Pillar"/>
+    <Split name="Boss_StardustPillar" text="Stardust Pillar"/>
+    <Split name="Boss_VortexPillar" text="Vortex Pillar"/>
+    <Split name="Boss_MoonLord" text="Moon Lord"/>
+  </Split>
+  <Split name="Items" text="Items">
+    <Split name="Item_273" text="Night's Edge"/>
+    <Split name="Item_757" text="Terra Blade"/>
+    <Split name="Item_4956" text="Zenith"/>
+    <Split name="Item_5043" text="Torch God's Favor"/>
+  </Split>
+</Splits>

@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FD56D8C2-D56B-4DFB-899D-08B357DAB776}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LiveSplit.Terraria</RootNamespace>
+    <AssemblyName>LiveSplit.Terraria</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;LOG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>LOG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="LiveSplit.Core">
+      <HintPath>..\LiveSplit\LiveSplit\LiveSplit.Core\obj\Release\LiveSplit.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="UpdateManager">
+      <HintPath>..\LiveSplit\LiveSplit\UpdateManager\obj\Release\UpdateManager.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomFontDialog">
+      <HintPath>..\LiveSplit\LiveSplit\Libs\CustomFontDialog\CustomFontDialog.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="LiveSplit.VoxSplitter\Factory.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\Component.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\Memory\Memory.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\Memory\SignatureMemory.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\Memory\NestedPointerFactory.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\Logger.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\NativeMethods.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\ExtensionMethods.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\Settings\Settings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\Settings\Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\Settings\TreeSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\Settings\TreeSettings.Designer.cs">
+      <DependentUpon>TreeSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\Settings\SplitGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\Settings\SplitGenerator.Designer.cs">
+      <DependentUpon>SplitGenerator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\Settings\TooltipSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\Settings\TooltipSettings.Designer.cs">
+      <DependentUpon>TooltipSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TerrariaComponent.cs" />
+    <Compile Include="TerrariaMemory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Splits\Presets.xml" />
+    <EmbeddedResource Include="Splits\Splits.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Components\ComponentsUpdate.xml" />
+    <None Include="Components\LiveSplit.Terraria.dll" />
+  </ItemGroup>
+  <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MANUALCOMPONENTS(;.*)*$'))">
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\FontTextComponent.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTextComponent.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTextSettings.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTextSettings.Designer.cs">
+      <DependentUpon>ManualTextSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTimer.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTimerSettings.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTimerSettings.Designer.cs">
+      <DependentUpon>ManualTimerSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualDoubleTimer.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualDoubleTimerSettings.cs" />
+    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualDoubleTimerSettings.Designer.cs">
+      <DependentUpon>ManualDoubleTimerSettings.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MONO(;.*)*$'))">
+    <Compile Include="LiveSplit.VoxSplitter\MonoHelper\MonoHelper.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
