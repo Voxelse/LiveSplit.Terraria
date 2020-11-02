@@ -7,7 +7,6 @@ namespace LiveSplit.Terraria {
         public TerrariaComponent(LiveSplitState state) : base(state) {
             memory = new TerrariaMemory(logger);
             settings = new TreeSettings(state, Start, Reset, Options);
-            settings.SetSettings(state.Run.AutoSplitterSettings);
         }
     }
 }

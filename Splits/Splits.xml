@@ -3,7 +3,8 @@
   <Split name="Bosses" text="Bosses">
     <Split name="Boss_EyeofCthulhu" text="Eye of Cthulhu"/>
     <Split name="Boss_KingSlime" text="King Slime"/>
-    <Split name="Boss_EaterofWorldsBrainofCthulhu" text="Eater of Worlds / Brain of Cthulhu"/>
+    <Split name="EaterofWorlds" text="Eater of Worlds"/>
+    <Split name="BrainofCthulhu" text="Brain of Cthulhu"/>
     <Split name="Boss_Skeletron" text="Skeletron"/>
     <Split name="Boss_QueenBee" text="Queen Bee"/>
     <Split name="WallofFlesh" text="Wall of Flesh"/>
@@ -23,9 +24,32 @@
     <Split name="Boss_MoonLord" text="Moon Lord"/>
   </Split>
   <Split name="Items" text="Items">
+    <Split name="Item_795" text="Blood Butcherer"/>
+    <Split name="Item_155" text="Muramasa"/>
+    <Split name="Item_190" text="Blade of Grass"/>
+    <Split name="Item_121" text="Fiery Greatsword"/>
     <Split name="Item_273" text="Night's Edge"/>
     <Split name="Item_757" text="Terra Blade"/>
     <Split name="Item_4956" text="Zenith"/>
     <Split name="Item_5043" text="Torch God's Favor"/>
+    <Split name="Item_224" text="Bed"/>
+    <Split name="Item_964" text="Boomstick"/>
+    <Split name="Item_534" text="Shotgun"/>
+    <Split name="Item_122" text="Molten Pickaxe"/>
+    <Split name="Item_1220" text="Orichalcum anvil"/>
+    <Split name="Item_525" text="Mythril anvil"/>
+    <Split name="Item_748" text="Jetpack"/>
+    <Split name="Item_1229" text="Chlorophyte Shotbow"/>
+    <Split name="Item_2673" text="Truffle worm"/>
+    <Split name="Item_4988" text="Gelatin crystal"/>
+    <Split name="Item_1826" text="The Horseman's Blade"/>
+    <Split name="Item_2880" text="Influx Waver"/>
+    <Split name="Item_74" text="Platinum coin"/>
+  </Split>
+  <Split name="Npcs" text="Npcs">
+    <Split name="Npc_17" text="Merchant"/>
+    <Split name="Npc_18" text="Nurse"/>
+    <Split name="Npc_19" text="Arms Dealer"/>
+    <Split name="Npc_38" text="Demolitionist"/>
   </Split>
 </Splits>
