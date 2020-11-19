@@ -12,6 +12,9 @@
     <Split name="Boss_TheDestroyer" text="The Destroyer"/>
     <Split name="Boss_TheTwins" text="The Twins"/>
     <Split name="Boss_SkeletronPrime" text="Skeletron Prime"/>
+    <Split name="MechBoss_1" text="Mechanical Boss Kill Any"/>
+    <Split name="MechBoss_2" text="Mechanical Boss Kill Two"/>
+    <Split name="MechBoss_3" text="Mechanical Boss Kill All"/>
     <Split name="Boss_Plantera" text="Plantera"/>
     <Split name="Boss_Golem" text="Golem"/>
     <Split name="Boss_DukeFishron" text="Duke Fishron"/>

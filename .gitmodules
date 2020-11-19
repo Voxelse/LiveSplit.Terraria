@@ -1,4 +1,3 @@
 [submodule "LiveSplit.VoxSplitter"]
 	path = LiveSplit.VoxSplitter
 	url = https://github.com/Voxelse/LiveSplit.VoxSplitter.git
-	branch = master
