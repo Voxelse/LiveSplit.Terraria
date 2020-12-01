@@ -1,5 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.2">
+    <files>
+      <file path="Components/LiveSplit.Terraria.dll" status="changed"/>
+    </files>
+    <changelog>
+      <change>Add more items</change>
+      <change>Add more bosses alternatives</change>
+      <change>Add boss checklist as an option</change>
+    </changelog>
+  </update>
   <update version="1.0.1">
     <files>
       <file path="Components/LiveSplit.Terraria.dll" status="changed"/>

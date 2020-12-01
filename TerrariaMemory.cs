@@ -17,11 +17,23 @@ namespace LiveSplit.Terraria {
         private bool needHardmodeSplit = false;
         private bool needCorruptionSplit = false;
         private bool needCrimsonSplit = false;
+        private bool needEvilSplit = false;
         private readonly HashSet<int> mechBossSplits = new HashSet<int>();
         private readonly HashSet<int> mechBossOffsets = new HashSet<int>();
         private int mechBossKills = 0;
         private readonly HashSet<int> itemIds = new HashSet<int>();
         private readonly HashSet<int> npcIds = new HashSet<int>();
+
+        private TerrariaBossChecklist bossChecklist;
+        public void ShowBossChecklist() {
+            if(bossChecklist?.IsDisposed ?? true) {
+                bossChecklist = new TerrariaBossChecklist();
+                bossChecklist.Show();
+            } else {
+                bossChecklist.BringToFront();
+                Logger.Log(bossChecklist.Size.ToString());
+            }
+        }
 
         public TerrariaMemory(LiveSplitState state, Logger logger) : base(state, logger) {
             SetProcessNames("Terraria");
@@ -30,7 +42,7 @@ namespace LiveSplit.Terraria {
                 { "updateTimeDay", new SignatureHolder(0, "55 8B EC 56 50 8B F1 33 D2") }
             });
         }
-
+        
         protected override void OnScanDone() {
             NestedPointerFactory ptrFactory = new NestedPointerFactory(this);
 
@@ -53,6 +65,7 @@ namespace LiveSplit.Terraria {
             needHardmodeSplit = false;
             needCorruptionSplit = false;
             needCrimsonSplit = false;
+            needEvilSplit = false;
             mechBossSplits.Clear();
             mechBossOffsets.Clear();
             mechBossKills = 0;
@@ -77,8 +90,26 @@ namespace LiveSplit.Terraria {
                     needCorruptionSplit = true;
                 } else if(split.Equals("BrainofCthulhu")) {
                     needCrimsonSplit = true;
+                } else if(split.Equals("EaterofWorldsOrBrainofCthulhu")) {
+                    needEvilSplit = true;
+                } else if(split.Equals("AllBosses")) {
+                    needHardmodeSplit = true;
+                    needEvilSplit = true;
+                    foreach(EBosses boss in Enum.GetValues(typeof(EBosses))) {
+                        string name = boss.ToString();
+                        if(!name.StartsWith("_") && !name.EndsWith("Pillar") && !name.Equals("EaterofWorldsBrainofCthulhu")) {
+                            bossOffsets.Add((int)boss);
+                        }
+                    }
+                } else if(split.Equals("Boots")) {
+                    itemIds.Add((int)EItems.HermesBoots);
+                    itemIds.Add((int)EItems.DuneriderBoots);
+                    itemIds.Add((int)EItems.FlurryBoots);
+                    itemIds.Add((int)EItems.SailfishBoots);
                 }
             }
+
+            bossChecklist?.ResetBosses();
         }
 
         public override bool Split() {
@@ -89,10 +120,12 @@ namespace LiveSplit.Terraria {
 
                 bool SplitBoss() {
                     if(bossOffsets.Count == 0) { return false; }
-                    
+
                     foreach(int offset in bossOffsets) {
                         if(Game.Read<bool>(bosses.New + offset)) {
-                            Logger.Log("Split Boss " + Enum.GetName(typeof(EBosses), offset));
+                            string name = GetBossName(offset);
+                            bossChecklist?.CheckBoss(name);
+                            Logger.Log("Split Boss " + name);
                             return bossOffsets.Remove(offset);
                         }
                     }
@@ -100,16 +133,21 @@ namespace LiveSplit.Terraria {
                 }
 
                 bool SplitWormOrBrain() {
-                    if((needCorruptionSplit || needCrimsonSplit) && Game.Read<bool>(bosses.New + (int)EBosses.EaterofWorldsBrainofCthulhu)) {
+                    bool isDown = Game.Read<bool>(bosses.New + (int)EBosses.EaterofWorldsBrainofCthulhu);
+                    if((needCorruptionSplit || needCrimsonSplit || needEvilSplit) && isDown) {
                         if(isCrimson.New) {
-                            if(needCrimsonSplit) {
+                            if(needCrimsonSplit || needEvilSplit) {
                                 needCrimsonSplit = false;
+                                needEvilSplit = false;
+                                bossChecklist?.CheckBoss(EBosses.EaterofWorldsBrainofCthulhu.ToString());
                                 Logger.Log("Split Boss BrainofCthulhu");
                                 return true;
                             }
                         } else {
-                            if(needCorruptionSplit) {
+                            if(needCorruptionSplit || needEvilSplit) {
                                 needCorruptionSplit = false;
+                                needEvilSplit = false;
+                                bossChecklist?.CheckBoss(EBosses.EaterofWorldsBrainofCthulhu.ToString());
                                 Logger.Log("Split Boss EaterofWorlds");
                                 return true;
                             }
@@ -121,6 +159,7 @@ namespace LiveSplit.Terraria {
                 bool SplitWallOfFlesh() {
                     if(needHardmodeSplit && isHardmode.New) {
                         needHardmodeSplit = false;
+                        bossChecklist?.CheckBoss("WallofFlesh");
                         Logger.Log("Split Boss WallofFlesh");
                         return true;
                     }
@@ -136,7 +175,9 @@ namespace LiveSplit.Terraria {
                             if(mechBossSplits.Count == 0) {
                                 mechBossOffsets.Clear();
                             }
-                            Logger.Log("Split Mech Boss " + mechBossKills + " " + Enum.GetName(typeof(EBosses), offset));
+                            string name = GetBossName(offset);
+                            bossChecklist?.CheckBoss(name);
+                            Logger.Log("Split Mech Boss " + mechBossKills + " " + name);
                             return true;
                         }
                     }
@@ -150,13 +191,21 @@ namespace LiveSplit.Terraria {
                 for(int i = 0; i < 60; i++) {
                     int type = Game.Read<int>(Game.Read<IntPtr>(inventory.New + 0x8 + 0x4 * i) + 0x94);
                     if(type != 0 && itemIds.Remove(type)) {
-                        Logger.Log("Split Item " + Enum.GetName(typeof(EItems), type));
+                        if(type == (int)EItems.HermesBoots || type == (int)EItems.DuneriderBoots
+                        || type == (int)EItems.FlurryBoots || type == (int)EItems.SailfishBoots) {
+                            itemIds.Remove((int)EItems.HermesBoots);
+                            itemIds.Remove((int)EItems.DuneriderBoots);
+                            itemIds.Remove((int)EItems.FlurryBoots);
+                            itemIds.Remove((int)EItems.SailfishBoots);
+                            Logger.Log("Split Boots Item " + GetItemName(type));
+                        } else {
+                            Logger.Log("Split Item " + GetItemName(type));
+                        }
                         return true;
                     }
                 }
                 return false;
             }
-
 
             bool SplitNpcs() {
                 if(npcIds.Count == 0) { return false; }
@@ -169,12 +218,23 @@ namespace LiveSplit.Terraria {
                     }
                     int type = Game.Read<int>(npcPtr + 0xD4);
                     if(npcIds.Remove(type)) {
-                        Logger.Log("Split Npc " + Enum.GetName(typeof(ENpcs), type));
+                        Logger.Log("Split Npc " + GetNpcName(type));
                         return true;
                     }
                 }
                 return false;
             }
+        }
+
+        public override void OnReset() => bossChecklist?.ResetBosses();
+
+        public static string GetBossName(int value) => Enum.GetName(typeof(EBosses), value);
+        public static string GetItemName(int value) => Enum.GetName(typeof(EItems), value);
+        public static string GetNpcName(int value) => Enum.GetName(typeof(ENpcs), value);
+
+        public override void Dispose() {
+            bossChecklist?.Dispose();
+            base.Dispose();
         }
     }
 }

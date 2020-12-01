@@ -84,11 +84,20 @@
       <DependentUpon>TooltipSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="TerrariaComponent.cs" />
-    <Compile Include="TerrariaEnums.cs" />
     <Compile Include="TerrariaMemory.cs" />
+    <Compile Include="TerrariaEnums.cs" />
+    <Compile Include="TerrariaBossChecklist.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TerrariaBossChecklist.Designer.cs">
+      <DependentUpon>TerrariaBossChecklist.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TerrariaBossChecklist.resx">
+      <DependentUpon>TerrariaBossChecklist.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Splits\Presets.xml" />
     <EmbeddedResource Include="Splits\Splits.xml" />
   </ItemGroup>

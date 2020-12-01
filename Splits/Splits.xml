@@ -5,6 +5,7 @@
     <Split name="Boss_KingSlime" text="King Slime"/>
     <Split name="EaterofWorlds" text="Eater of Worlds"/>
     <Split name="BrainofCthulhu" text="Brain of Cthulhu"/>
+    <Split name="EaterofWorldsOrBrainofCthulhu" text="Evil Boss Any"/>
     <Split name="Boss_Skeletron" text="Skeletron"/>
     <Split name="Boss_QueenBee" text="Queen Bee"/>
     <Split name="WallofFlesh" text="Wall of Flesh"/>
@@ -26,8 +27,10 @@
     <Split name="Boss_VortexPillar" text="Vortex Pillar"/>
     <Split name="Boss_MoonLord" text="Moon Lord"/>
   </Split>
+  <Split name="AllBosses" text="Split at each boss (except Pillars and Events)"/>
   <Split name="Items" text="Items">
     <Split name="Item_795" text="Blood Butcherer"/>
+    <Split name="Item_46" text="Light's Bane"/>
     <Split name="Item_155" text="Muramasa"/>
     <Split name="Item_190" text="Blade of Grass"/>
     <Split name="Item_121" text="Fiery Greatsword"/>
@@ -36,6 +39,14 @@
     <Split name="Item_4956" text="Zenith"/>
     <Split name="Item_5043" text="Torch God's Favor"/>
     <Split name="Item_224" text="Bed"/>
+    <Split name="Item_5066" text="Bee Hive"/>
+    <Split name="Boots" text="Boots (Hermes/Dunerider/Flurry/Sailfish)"/>
+    <Split name="Item_4263" text="Magic Conch"/>
+    <Split name="Item_97" text="Musket Ball"/>
+    <Split name="Item_800" text="The Undertaker"/>
+    <Split name="Item_96" text="Musket"/>
+    <Split name="Item_168" text="Grenade"/>
+    <Split name="Item_4795" text="Goat Skull"/>
     <Split name="Item_964" text="Boomstick"/>
     <Split name="Item_534" text="Shotgun"/>
     <Split name="Item_122" text="Molten Pickaxe"/>

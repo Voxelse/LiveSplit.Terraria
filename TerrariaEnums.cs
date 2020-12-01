@@ -6,19 +6,19 @@
         Skeletron,
         QueenBee,
         KingSlime = 0x0,
-        GoblinArmy,//Event
-        FrostLegion,//Event
-        PirateInvasion,//Event
-        SolarEclipse,//Event
+        _GoblinArmy,//Event
+        _FrostLegion,//Event
+        _PirateInvasion,//Event
+        _SolarEclipse,//Event
         Plantera,
         Golem,
-        MartianSaucer,//Event
+        _MartianSaucer,//Event
         DukeFishron,
-        MourningWood,//Event
-        Pumpking,//Event
-        IceQueen,//Event
-        Everscream,//Event
-        SantaNK1,//Event
+        _MourningWood,//Event
+        _Pumpking,//Event
+        _IceQueen,//Event
+        _Everscream,//Event
+        _SantaNK1,//Event
         LunaticCultist,
         MoonLord,
         SolarPillar,
@@ -34,10 +34,15 @@
     }
 
     public enum EItems {
+        LightsBane = 46,
+        HermesBoots = 54,
         PlatinumCoin = 74,
+        Musket = 96,
+        MusketBall = 97,
         FieryGreatsword = 121,
         MoltenPickaxe = 122,
         Muramasa = 155,
+        Grenade = 168,
         BladeofGrass = 190,
         Bed = 224,
         NightsEdge = 273,
@@ -46,15 +51,22 @@
         Jetpack = 748,
         TerraBlade = 757,
         BloodButcherer = 795,
+        TheUndertaker = 800,
         Boomstick = 964,
         OrichalcumAnvil = 1220,
         ChlorophyteShotbow = 1229,
+        FlurryBoots = 1579,
         TheHorsemansBlade = 1826,
         TruffleWorm = 2673,
         InfluxWaver = 2880,
+        SailfishBoots = 3200,
+        DuneriderBoots = 4055,
+        MagicConch = 4263,
+        GoatSkull = 4795,
         Zenith = 4956,
         GelatinCrystal = 4988,
         TorchGodsFavor = 5043,
+        BeeHive = 5066,
     }
 
     public enum ENpcs {
