@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.3">
+    <files>
+      <file path="Components/LiveSplit.Terraria.dll" status="changed"/>
+    </files>
+    <changelog>
+      <change>The boss checklist now ignores split settings</change>
+      <change>Save the boss checklist layout preferences</change>
+      <change>Fix boss checklist forms errors</change>
+      <change>Change "All Bosses" split</change>
+    </changelog>
+  </update>
   <update version="1.0.2">
     <files>
       <file path="Components/LiveSplit.Terraria.dll" status="changed"/>

@@ -5,7 +5,7 @@
     <Split name="Boss_KingSlime" text="King Slime"/>
     <Split name="EaterofWorlds" text="Eater of Worlds"/>
     <Split name="BrainofCthulhu" text="Brain of Cthulhu"/>
-    <Split name="EaterofWorldsOrBrainofCthulhu" text="Evil Boss Any"/>
+    <Split name="Boss_EaterofWorldsBrainofCthulhu" text="Evil Boss - Kill Any"/>
     <Split name="Boss_Skeletron" text="Skeletron"/>
     <Split name="Boss_QueenBee" text="Queen Bee"/>
     <Split name="WallofFlesh" text="Wall of Flesh"/>
@@ -13,9 +13,9 @@
     <Split name="Boss_TheDestroyer" text="The Destroyer"/>
     <Split name="Boss_TheTwins" text="The Twins"/>
     <Split name="Boss_SkeletronPrime" text="Skeletron Prime"/>
-    <Split name="MechBoss_1" text="Mechanical Boss Kill Any"/>
-    <Split name="MechBoss_2" text="Mechanical Boss Kill Two"/>
-    <Split name="MechBoss_3" text="Mechanical Boss Kill All"/>
+    <Split name="MechBoss_1" text="Mechanical Boss - Kill Any"/>
+    <Split name="MechBoss_2" text="Mechanical Boss - Kill Two"/>
+    <Split name="MechBoss_3" text="Mechanical Boss - Kill All"/>
     <Split name="Boss_Plantera" text="Plantera"/>
     <Split name="Boss_Golem" text="Golem"/>
     <Split name="Boss_DukeFishron" text="Duke Fishron"/>
@@ -26,8 +26,8 @@
     <Split name="Boss_StardustPillar" text="Stardust Pillar"/>
     <Split name="Boss_VortexPillar" text="Vortex Pillar"/>
     <Split name="Boss_MoonLord" text="Moon Lord"/>
+    <Split name="AllBosses" text="Beat all bosses (except Pillars and Events)"/>
   </Split>
-  <Split name="AllBosses" text="Split at each boss (except Pillars and Events)"/>
   <Split name="Items" text="Items">
     <Split name="Item_795" text="Blood Butcherer"/>
     <Split name="Item_46" text="Light's Bane"/>

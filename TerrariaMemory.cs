@@ -6,34 +6,28 @@ using System.Collections.Generic;
 namespace LiveSplit.Terraria {
     public class TerrariaMemory : SignatureMemory {
 
-        private Pointer<IntPtr> npc;
-        private Pointer<IntPtr> bosses;
-        private Pointer<IntPtr> inventory;
-        private Pointer<bool> isGameMenu;
-        private Pointer<bool> isHardmode;
-        private Pointer<bool> isCrimson;
+        public Pointer<IntPtr> Npc { get; private set; }
+        public Pointer<IntPtr> Bosses { get; private set; }
+        public Pointer<IntPtr> Inventory { get; private set; }
+        public Pointer<bool> IsGameMenu { get; private set; }
+        public Pointer<bool> IsHardmode { get; private set; }
+        public Pointer<bool> IsCrimson { get; private set; }
 
         private readonly HashSet<int> bossOffsets = new HashSet<int>();
         private bool needHardmodeSplit = false;
         private bool needCorruptionSplit = false;
         private bool needCrimsonSplit = false;
-        private bool needEvilSplit = false;
         private readonly HashSet<int> mechBossSplits = new HashSet<int>();
         private readonly HashSet<int> mechBossOffsets = new HashSet<int>();
         private int mechBossKills = 0;
+        private bool needAllBossSplit = false;
+        private readonly HashSet<int> trackedBossOffsets = new HashSet<int>();
+        private bool trackHardmode = false;
+        private int allBossKills = 0;
         private readonly HashSet<int> itemIds = new HashSet<int>();
         private readonly HashSet<int> npcIds = new HashSet<int>();
 
-        private TerrariaBossChecklist bossChecklist;
-        public void ShowBossChecklist() {
-            if(bossChecklist?.IsDisposed ?? true) {
-                bossChecklist = new TerrariaBossChecklist();
-                bossChecklist.Show();
-            } else {
-                bossChecklist.BringToFront();
-                Logger.Log(bossChecklist.Size.ToString());
-            }
-        }
+        public TerrariaBossChecklist bossChecklist;
 
         public TerrariaMemory(LiveSplitState state, Logger logger) : base(state, logger) {
             SetProcessNames("Terraria");
@@ -47,30 +41,39 @@ namespace LiveSplit.Terraria {
             NestedPointerFactory ptrFactory = new NestedPointerFactory(this);
 
             IntPtr time = scanData[""]["updateTime"].Pointer;
-            isGameMenu = ptrFactory.Make<bool>(Game.Read<IntPtr>(time + 0x90));
-            bosses = ptrFactory.Make<IntPtr>(time + 0x335);
-            isHardmode = ptrFactory.Make<bool>(Game.Read<IntPtr>(time + 0x345));
-            inventory = ptrFactory.Make<IntPtr>(Game.Read<IntPtr>(time + 0x369), 0x8, 0xC4);
-            npc = ptrFactory.Make<IntPtr>(Game.Read<IntPtr>(time + 0x7ED));
+            IsGameMenu = ptrFactory.Make<bool>(Game.Read<IntPtr>(time + 0x90));
+            Bosses = ptrFactory.Make<IntPtr>(time + 0x335);
+            IsHardmode = ptrFactory.Make<bool>(Game.Read<IntPtr>(time + 0x345));
+            Inventory = ptrFactory.Make<IntPtr>(Game.Read<IntPtr>(time + 0x369), 0x8, 0xC4);
+            Npc = ptrFactory.Make<IntPtr>(Game.Read<IntPtr>(time + 0x7ED));
 
-            isCrimson = ptrFactory.Make<bool>(Game.Read<IntPtr>(scanData[""]["updateTimeDay"].Pointer + 0xD9));
+            IsCrimson = ptrFactory.Make<bool>(Game.Read<IntPtr>(scanData[""]["updateTimeDay"].Pointer + 0xD9));
 
             Logger.Log(ptrFactory.ToString());
         }
 
-        public override bool Start(int start) => isGameMenu.Old && !isGameMenu.New;
+        public override bool Update() {
+            bossChecklist?.Update(this);
+            return true;
+        }
+
+        public override bool Start(int start) => IsGameMenu.Old && !IsGameMenu.New;
 
         public override void OnStart(HashSet<string> splits) {
             bossOffsets.Clear();
             needHardmodeSplit = false;
             needCorruptionSplit = false;
             needCrimsonSplit = false;
-            needEvilSplit = false;
             mechBossSplits.Clear();
             mechBossOffsets.Clear();
             mechBossKills = 0;
+            needAllBossSplit = false;
+            trackedBossOffsets.Clear();
+            trackHardmode = false;
+            allBossKills = 0;
             itemIds.Clear();
             npcIds.Clear();
+
 
             foreach(string split in splits) {
                 if(split.StartsWith("Boss_")) {
@@ -90,17 +93,8 @@ namespace LiveSplit.Terraria {
                     needCorruptionSplit = true;
                 } else if(split.Equals("BrainofCthulhu")) {
                     needCrimsonSplit = true;
-                } else if(split.Equals("EaterofWorldsOrBrainofCthulhu")) {
-                    needEvilSplit = true;
                 } else if(split.Equals("AllBosses")) {
-                    needHardmodeSplit = true;
-                    needEvilSplit = true;
-                    foreach(EBosses boss in Enum.GetValues(typeof(EBosses))) {
-                        string name = boss.ToString();
-                        if(!name.StartsWith("_") && !name.EndsWith("Pillar") && !name.Equals("EaterofWorldsBrainofCthulhu")) {
-                            bossOffsets.Add((int)boss);
-                        }
-                    }
+                    needAllBossSplit = true;
                 } else if(split.Equals("Boots")) {
                     itemIds.Add((int)EItems.HermesBoots);
                     itemIds.Add((int)EItems.DuneriderBoots);
@@ -109,47 +103,58 @@ namespace LiveSplit.Terraria {
                 }
             }
 
-            bossChecklist?.ResetBosses();
+            if(needAllBossSplit) {
+                trackHardmode = !needHardmodeSplit;
+                foreach(EBosses boss in AllBosses) {
+                    if(!bossOffsets.Contains((int)boss)
+                    && (!boss.ToString().Equals("EaterofWorldsBrainofCthulhu") || (!needCorruptionSplit && !needCrimsonSplit))) {
+                        trackedBossOffsets.Add((int)boss);
+                    }
+                }
+            }
+
+            bossChecklist?.SetRunning(true);
         }
 
         public override bool Split() {
-            return !isGameMenu.New && (SplitBosses() || SplitItems() || SplitNpcs());
+            return !IsGameMenu.New && (SplitBosses() || SplitItems() || SplitNpcs());
 
             bool SplitBosses() {
                 return SplitBoss() || SplitWormOrBrain() || SplitWallOfFlesh() || SplitMech();
 
                 bool SplitBoss() {
-                    if(bossOffsets.Count == 0) { return false; }
+                    if(bossOffsets.Count == 0 && trackedBossOffsets.Count == 0) { return false; }
 
                     foreach(int offset in bossOffsets) {
-                        if(Game.Read<bool>(bosses.New + offset)) {
-                            string name = GetBossName(offset);
-                            bossChecklist?.CheckBoss(name);
-                            Logger.Log("Split Boss " + name);
-                            return bossOffsets.Remove(offset);
+                        if(Game.Read<bool>(Bosses.New + offset)) {
+                            Logger.Log("Split Boss " + GetBossName(offset));
+                            return bossOffsets.Remove(offset) | SplitAllBosses();
+                        }
+                    }
+                    foreach(int offset in trackedBossOffsets) {
+                        if(Game.Read<bool>(Bosses.New + offset)) {
+                            trackedBossOffsets.Remove(offset);
+                            Logger.Log("Track Boss " + GetBossName(offset));
+                            return SplitAllBosses();
                         }
                     }
                     return false;
                 }
 
                 bool SplitWormOrBrain() {
-                    bool isDown = Game.Read<bool>(bosses.New + (int)EBosses.EaterofWorldsBrainofCthulhu);
-                    if((needCorruptionSplit || needCrimsonSplit || needEvilSplit) && isDown) {
-                        if(isCrimson.New) {
-                            if(needCrimsonSplit || needEvilSplit) {
+                    if((needCorruptionSplit || needCrimsonSplit)
+                    && Game.Read<bool>(Bosses.New + (int)EBosses.EaterofWorldsBrainofCthulhu)) {
+                        if(IsCrimson.New) {
+                            if(needCrimsonSplit) {
                                 needCrimsonSplit = false;
-                                needEvilSplit = false;
-                                bossChecklist?.CheckBoss(EBosses.EaterofWorldsBrainofCthulhu.ToString());
                                 Logger.Log("Split Boss BrainofCthulhu");
-                                return true;
+                                return true | SplitAllBosses();
                             }
                         } else {
-                            if(needCorruptionSplit || needEvilSplit) {
+                            if(needCorruptionSplit) {
                                 needCorruptionSplit = false;
-                                needEvilSplit = false;
-                                bossChecklist?.CheckBoss(EBosses.EaterofWorldsBrainofCthulhu.ToString());
                                 Logger.Log("Split Boss EaterofWorlds");
-                                return true;
+                                return true | SplitAllBosses();
                             }
                         }
                     }
@@ -157,11 +162,16 @@ namespace LiveSplit.Terraria {
                 }
 
                 bool SplitWallOfFlesh() {
-                    if(needHardmodeSplit && isHardmode.New) {
-                        needHardmodeSplit = false;
-                        bossChecklist?.CheckBoss("WallofFlesh");
-                        Logger.Log("Split Boss WallofFlesh");
-                        return true;
+                    if((needHardmodeSplit || trackHardmode) && IsHardmode.New) {
+                        if(needHardmodeSplit) {
+                            needHardmodeSplit = false;
+                            Logger.Log("Split Boss WallofFlesh");
+                            return true | SplitAllBosses();
+                        } else {
+                            trackHardmode = false;
+                            Logger.Log("Track Boss WallofFlesh");
+                            return SplitAllBosses();
+                        }
                     }
                     return false;
                 }
@@ -170,18 +180,20 @@ namespace LiveSplit.Terraria {
                     if(mechBossOffsets.Count == 0) { return false; }
 
                     foreach(int offset in mechBossOffsets) {
-                        bool isDown = Game.Read<bool>(bosses.New + offset);
+                        bool isDown = Game.Read<bool>(Bosses.New + offset);
                         if(isDown && mechBossOffsets.Remove(offset) && mechBossSplits.Remove(++mechBossKills)) {
                             if(mechBossSplits.Count == 0) {
                                 mechBossOffsets.Clear();
                             }
-                            string name = GetBossName(offset);
-                            bossChecklist?.CheckBoss(name);
-                            Logger.Log("Split Mech Boss " + mechBossKills + " " + name);
+                            Logger.Log("Split Mech Boss " + mechBossKills + " " + GetBossName(offset));
                             return true;
                         }
                     }
                     return false;
+                }
+
+                bool SplitAllBosses() {
+                    return needAllBossSplit && (++allBossKills == 16);
                 }
             }
 
@@ -189,7 +201,7 @@ namespace LiveSplit.Terraria {
                 if(itemIds.Count == 0) { return false; }
 
                 for(int i = 0; i < 60; i++) {
-                    int type = Game.Read<int>(Game.Read<IntPtr>(inventory.New + 0x8 + 0x4 * i) + 0x94);
+                    int type = Game.Read<int>(Game.Read<IntPtr>(Inventory.New + 0x8 + 0x4 * i) + 0x94);
                     if(type != 0 && itemIds.Remove(type)) {
                         if(type == (int)EItems.HermesBoots || type == (int)EItems.DuneriderBoots
                         || type == (int)EItems.FlurryBoots || type == (int)EItems.SailfishBoots) {
@@ -211,7 +223,7 @@ namespace LiveSplit.Terraria {
                 if(npcIds.Count == 0) { return false; }
 
                 for(int i = 0; i < 201; i++) {
-                    IntPtr npcPtr = Game.Read<IntPtr>(npc.New + 0x8 + 0x4 * i);
+                    IntPtr npcPtr = Game.Read<IntPtr>(Npc.New + 0x8 + 0x4 * i);
                     bool isActive = Game.Read<bool>(npcPtr + 0x18);
                     if(!isActive) {
                         return false;
@@ -226,11 +238,24 @@ namespace LiveSplit.Terraria {
             }
         }
 
-        public override void OnReset() => bossChecklist?.ResetBosses();
+        public override void OnReset() => bossChecklist?.SetRunning(false);
 
         public static string GetBossName(int value) => Enum.GetName(typeof(EBosses), value);
         public static string GetItemName(int value) => Enum.GetName(typeof(EItems), value);
         public static string GetNpcName(int value) => Enum.GetName(typeof(ENpcs), value);
+
+        public static EBosses[] AllBosses {
+            get {
+                List<EBosses> bosses = new List<EBosses>();
+                foreach(EBosses boss in Enum.GetValues(typeof(EBosses))) {
+                    string name = boss.ToString();
+                    if(!name.StartsWith("_") && !name.EndsWith("Pillar")) {
+                        bosses.Add(boss);
+                    }
+                }
+                return bosses.ToArray();
+            }
+        }
 
         public override void Dispose() {
             bossChecklist?.Dispose();

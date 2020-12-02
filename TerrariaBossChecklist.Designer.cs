@@ -36,7 +36,7 @@
             this.WebBrowser.Name = "WebBrowser";
             this.WebBrowser.Size = new System.Drawing.Size(1000, 500);
             this.WebBrowser.TabIndex = 0;
-            this.WebBrowser.Url = new System.Uri("https://dryoshiyahu.github.io/terraria-boss-checklist/", System.UriKind.Absolute);
+            this.WebBrowser.Url = new System.Uri("", System.UriKind.Relative);
             this.WebBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.WebBrowser_DocumentCompleted);
             this.WebBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.WebBrowser_Navigating);
             // 
