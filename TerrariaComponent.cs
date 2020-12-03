@@ -15,9 +15,7 @@ namespace LiveSplit.Terraria {
 
     public class TerrariaComponent : VoxSplitter.Component {
 
-        protected string bossChecklistUrl = null;
-        protected Size? bossChecklistSize = null;
-        protected Point? bossChecklistLocation = null;
+        private BossChecklistData? bossChecklistData = null;
 
         protected override SettingInfo? Reset => null;
         protected override OptionsInfo? Options => new OptionsInfo(new string[0], CreateControlsFromEnum<EOption>());
@@ -29,26 +27,43 @@ namespace LiveSplit.Terraria {
 
         public override void SetSettings(XmlNode settings) {
             base.SetSettings(settings);
+
             XmlElement bossCheckList = settings["BossChecklist"];
             if(bossCheckList != null) {
-                bossChecklistUrl = bossCheckList["Url"].InnerText;
                 string sizeText = bossCheckList["Size"].InnerText;
                 int sizeSeparator = sizeText.IndexOf(',');
-                bossChecklistSize = new Size(Int32.Parse(sizeText.Substring(0, sizeSeparator)), Int32.Parse(sizeText.Substring(sizeSeparator + 1)));
                 string locText = bossCheckList["Location"].InnerText;
                 int locSeparator = locText.IndexOf(',');
-                bossChecklistLocation = new Point(Int32.Parse(locText.Substring(0, locSeparator)), Int32.Parse(locText.Substring(locSeparator + 1)));
+                bossChecklistData = new BossChecklistData(
+                    bossCheckList["Url"].InnerText,
+                    new Size(Int32.Parse(sizeText.Substring(0, sizeSeparator)), Int32.Parse(sizeText.Substring(sizeSeparator + 1))),
+                    new Point(Int32.Parse(locText.Substring(0, locSeparator)), Int32.Parse(locText.Substring(locSeparator + 1)))
+                );
+                if(bossCheckList["Open"] != null && Boolean.Parse(bossCheckList["Open"].InnerText)) {
+                    OpenBossChecklist();
+                }
             }
         }
 
         public override XmlNode GetSettings(XmlDocument doc) {
             XmlElement xmlElement = (XmlElement)base.GetSettings(doc);
+
             TerrariaMemory mem = (TerrariaMemory)memory;
-            if(!mem.bossChecklist?.IsDisposed ?? false) {
+            if(mem.bossChecklist != null || bossChecklistData != null) {
                 XmlElement xmlChecklist = doc.CreateElement("BossChecklist");
-                xmlChecklist.AppendChild(doc.ToElement("Url", mem.bossChecklist.Url));
-                xmlChecklist.AppendChild(doc.ToElement("Size", mem.bossChecklist.Size.Width + "," + mem.bossChecklist.Size.Height));
-                xmlChecklist.AppendChild(doc.ToElement("Location", mem.bossChecklist.Location.X + "," + mem.bossChecklist.Location.Y));
+
+                bool isOpen = mem.bossChecklist != null;
+                xmlChecklist.AppendChild(doc.ToElement("Open", isOpen));
+                
+                string url = isOpen ? mem.bossChecklist.Url : bossChecklistData?.url;
+                xmlChecklist.AppendChild(doc.ToElement("Url", url));
+                
+                Size size = isOpen ? mem.bossChecklist.Size : (Size)bossChecklistData?.size;
+                xmlChecklist.AppendChild(doc.ToElement("Size", size.Width + "," + size.Height));
+                
+                Point location = isOpen ? mem.bossChecklist.Location : (Point)bossChecklistData?.location;
+                xmlChecklist.AppendChild(doc.ToElement("Location", location.X + "," + location.Y));
+
                 xmlElement.AppendChild(xmlChecklist);
             }
             return xmlElement;
@@ -56,30 +71,42 @@ namespace LiveSplit.Terraria {
 
         private void OptionChanged(object sender, OptionEventArgs e) {
             if(e.Name == EOption.BossChecklist.ToString()) {
-                TerrariaMemory mem = (TerrariaMemory)memory;
-                if(mem.bossChecklist?.IsDisposed ?? true) {
-                    mem.bossChecklist = new TerrariaBossChecklist();
-                    if(bossChecklistUrl != null) {
-                        mem.bossChecklist.Url = bossChecklistUrl;
-                    }
-                    if(bossChecklistSize != null) {
-                        mem.bossChecklist.Size = (Size)bossChecklistSize;
-                    }
-                    if(bossChecklistLocation != null) {
-                        mem.bossChecklist.StartPosition = FormStartPosition.Manual;
-                        mem.bossChecklist.Location = (Point)bossChecklistLocation;
-                    }
-                    mem.bossChecklist.Disposed += (s, evt) => mem.bossChecklist = null;
-                    mem.bossChecklist.Show();
-                } else {
-                    mem.bossChecklist.BringToFront();
+                OpenBossChecklist();
+            }
+        }
+
+        private void OpenBossChecklist() {
+            TerrariaMemory mem = (TerrariaMemory)memory;
+            if(mem.bossChecklist == null) {
+                mem.bossChecklist = new TerrariaBossChecklist();
+                if(bossChecklistData != null) {
+                    mem.bossChecklist.Url = bossChecklistData?.url;
+                    mem.bossChecklist.Size = (Size)(bossChecklistData?.size);
+                    mem.bossChecklist.StartPosition = FormStartPosition.Manual;
+                    mem.bossChecklist.Location = (Point)bossChecklistData?.location;
                 }
+                mem.bossChecklist.Disposed += (s, evt) => mem.bossChecklist = null;
+                mem.bossChecklist.Show();
+            } else {
+                mem.bossChecklist.BringToFront();
             }
         }
 
         public override void Dispose() {
             settings.OptionChanged -= OptionChanged;
             base.Dispose();
+        }
+
+        private struct BossChecklistData {
+            public string url;
+            public Size size;
+            public Point location;
+
+            public BossChecklistData(string url, Size size, Point location) {
+                this.url = url;
+                this.size = size;
+                this.location = location;
+            }
         }
     }
 }
