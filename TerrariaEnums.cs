@@ -1,4 +1,27 @@
-﻿namespace LiveSplit.Terraria {
+﻿using System;
+using System.Collections.Generic;
+
+namespace LiveSplit.Terraria {
+
+    public static class TerrariaEnums {
+        public static string BossName(int value) => Enum.GetName(typeof(EBosses), value);
+        public static string ItemName(int value) => Enum.GetName(typeof(EItems), value);
+        public static string NpcName(int value) => Enum.GetName(typeof(ENpcs), value);
+
+        public static EBosses[] AllBosses {
+            get {
+                List<EBosses> bosses = new List<EBosses>();
+                foreach(EBosses boss in Enum.GetValues(typeof(EBosses))) {
+                    string name = boss.ToString();
+                    if(!name.StartsWith("_") && !name.EndsWith("Pillar")) {
+                        bosses.Add(boss);
+                    }
+                }
+                return bosses.ToArray();
+            }
+        }
+    }
+
     public enum EBosses {
         //Wall of Flesh
         EyeofCthulhu = -0x4,

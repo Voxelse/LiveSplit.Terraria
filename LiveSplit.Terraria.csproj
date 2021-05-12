@@ -13,13 +13,15 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;LOG</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -28,10 +30,14 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>LOG</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -41,49 +47,17 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="LiveSplit.Core">
-      <HintPath>..\LiveSplit\LiveSplit\LiveSplit.Core\obj\Release\LiveSplit.Core.dll</HintPath>
+      <HintPath>..\LiveSplit\LiveSplit\bin\Release\LiveSplit.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="UpdateManager">
-      <HintPath>..\LiveSplit\LiveSplit\UpdateManager\obj\Release\UpdateManager.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomFontDialog">
-      <HintPath>..\LiveSplit\LiveSplit\Libs\CustomFontDialog\CustomFontDialog.dll</HintPath>
+      <HintPath>..\LiveSplit\LiveSplit\bin\Release\UpdateManager.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LiveSplit.VoxSplitter\Factory.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\Component.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\Memory\Memory.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\Memory\SignatureMemory.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\Memory\NestedPointerFactory.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\Logger.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\NativeMethods.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\ExtensionMethods.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\Settings\Settings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\Settings\Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\Settings\TreeSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\Settings\TreeSettings.Designer.cs">
-      <DependentUpon>TreeSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\Settings\SplitGenerator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\Settings\SplitGenerator.Designer.cs">
-      <DependentUpon>SplitGenerator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\Settings\TooltipSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\Settings\TooltipSettings.Designer.cs">
-      <DependentUpon>TooltipSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="TerrariaComponent.cs" />
+    <Compile Include="TerrariaComponentLogic.cs" />
     <Compile Include="TerrariaMemory.cs" />
     <Compile Include="TerrariaEnums.cs" />
     <Compile Include="TerrariaBossChecklist.cs">
@@ -105,26 +79,17 @@
     <None Include="Components\ComponentsUpdate.xml" />
     <None Include="Components\LiveSplit.Terraria.dll" />
   </ItemGroup>
-  <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MANUALCOMPONENTS(;.*)*$'))">
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\FontTextComponent.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTextComponent.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTextSettings.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTextSettings.Designer.cs">
-      <DependentUpon>ManualTextSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTimer.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTimerSettings.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualTimerSettings.Designer.cs">
-      <DependentUpon>ManualTimerSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualDoubleTimer.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualDoubleTimerSettings.cs" />
-    <Compile Include="LiveSplit.VoxSplitter\ManualComponents\ManualDoubleTimerSettings.Designer.cs">
-      <DependentUpon>ManualDoubleTimerSettings.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MONO(;.*)*$'))">
-    <Compile Include="LiveSplit.VoxSplitter\MonoHelper\MonoHelper.cs" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="Voxif.AutoSplitter" Version="1.0.5" />
+    <PackageReference Include="Voxif.Helpers.MemoryHelper" Version="1.0.2" />
+    <PackageReference Include="Voxif.Helpers" Version="1.0.0" />
+    <PackageReference Include="Voxif.IO" Version="1.0.0" />
+    <PackageReference Include="Voxif.Memory" Version="1.0.3" />
+    <PackageReference Include="ILMerge" Version="3.0.41" />
+  </ItemGroup>
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(TargetDir)$(TargetName)$(TargetExt)" DestinationFiles="$(TargetDir)$(TargetName).build$(TargetExt)" />
+    <Exec Command="$(ILMergeConsolePath) $(OutDir)$(TargetName).build$(TargetExt) /ndebug /wildcards /closed /out:$(OutDir)$(TargetFileName) $(OutDir)Voxif.*.dll" />
+  </Target>
 </Project>

@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.5">
+    <files>
+      <file path="Components/LiveSplit.Terraria.dll" status="changed"/>
+    </files>
+    <changelog>
+      <change>Update for 1.4.2.2</change>
+    </changelog>
+  </update>
   <update version="1.0.4">
     <files>
       <file path="Components/LiveSplit.Terraria.dll" status="changed"/>

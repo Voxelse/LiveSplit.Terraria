@@ -1,5 +1,4 @@
-﻿using LiveSplit.VoxSplitter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -83,17 +82,19 @@ namespace LiveSplit.Terraria {
         public void SetRunning(bool value) {
             isRunning = value;
             WebBrowser.Document.InvokeScript("resetBosses");
-            bossOffsets = new HashSet<int>(TerrariaMemory.AllBosses.Cast<int>());
+            bossOffsets = new HashSet<int>(TerrariaEnums.AllBosses.Cast<int>());
             isHardmode = false;
         }
 
         public void Update(TerrariaMemory memory) {
-            if(!isRunning) { return; }
+            if(!isRunning) {
+                return;
+            }
 
             foreach(int offset in bossOffsets.ToArray()) {
-                if(memory.Game.Read<bool>(memory.Bosses.New + offset)) {
+                if(memory.IsBossBeaten(offset)) {
                     bossOffsets.Remove(offset);
-                    CheckBoss(TerrariaMemory.GetBossName(offset));
+                    CheckBoss(TerrariaEnums.BossName(offset));
                 }
             }
 
