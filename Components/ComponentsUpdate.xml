@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.6">
+    <files>
+      <file path="Components/LiveSplit.Terraria.dll" status="changed"/>
+    </files>
+    <changelog>
+      <change>Updated for 1.4.3.2</change>
+      <change>Added Deerclops split</change>
+    </changelog>
+  </update>
   <update version="1.0.5">
     <files>
       <file path="Components/LiveSplit.Terraria.dll" status="changed"/>

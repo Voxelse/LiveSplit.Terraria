@@ -21,7 +21,7 @@ namespace LiveSplit.Terraria {
 
         private readonly ScannableData scanDict = new ScannableData {
             {"", new Dictionary<string, ScanTarget> {
-                { "updateTime", new ScanTarget(0, "55 8B EC 57 56 83 EC 34 8D 7D D0 B9") },
+                { "updateTime", new ScanTarget(0, "55 8B EC 57 56 83 EC ?? 8D 7D ?? B9 ???????? 33 C0 F3 AB 80 3D ???????? 00 75 ?? 0FB6") },
                 { "updateTimeDay", new ScanTarget(0, "55 8B EC 56 50 8B F1 33 D2") }
             }
         } };
@@ -46,10 +46,10 @@ namespace LiveSplit.Terraria {
             IntPtr time = result[""]["updateTime"];
             IsGameMenu = ptrFactory.Make<bool>(game.Read<IntPtr>(time + 0x90));
 
-            Bosses = ptrFactory.Make<IntPtr>(time + 0x342);
-            IsHardmode = ptrFactory.Make<bool>(game.Read<IntPtr>(time + 0x352));
-            Inventory = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x376), 0x8, 0xD0);
-            Npc = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x7F1));
+            Bosses = ptrFactory.Make<IntPtr>(time + 0x336);
+            IsHardmode = ptrFactory.Make<bool>(game.Read<IntPtr>(time + 0x346));
+            Inventory = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x36A), 0x8, 0xD0);
+            Npc = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x81A));
 
             IsCrimson = ptrFactory.Make<bool>(game.Read<IntPtr>(result[""]["updateTimeDay"] + 0xD9));
 

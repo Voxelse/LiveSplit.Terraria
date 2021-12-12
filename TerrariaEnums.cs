@@ -50,8 +50,9 @@ namespace LiveSplit.Terraria {
         StardustPillar,
         EmpressofLight,
         QueenSlime,
+        Deerclops,
         //offset 6*1
-        TheDestroyer = 0x1C,
+        TheDestroyer = 0x1D,
         TheTwins,
         SkeletronPrime
     }
