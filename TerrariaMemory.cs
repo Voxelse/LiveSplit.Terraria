@@ -61,7 +61,7 @@ namespace LiveSplit.Terraria {
         public override bool Update() => base.Update() && scanTask == null;
 
         public bool IsBossBeaten(int offset) {
-            return game.Read<bool>(Bosses.New + offset);
+            return Bosses != null && game.Read<bool>(Bosses.New + offset);
         }
 
         public IEnumerable<int> ItemSequence() {

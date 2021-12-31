@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.7">
+    <files>
+      <file path="Components/LiveSplit.Terraria.dll" status="changed"/>
+    </files>
+    <changelog>
+      <change>Fixed some boss checklist errors when the game is closed</change>
+    </changelog>
+  </update>
   <update version="1.0.6">
     <files>
       <file path="Components/LiveSplit.Terraria.dll" status="changed"/>

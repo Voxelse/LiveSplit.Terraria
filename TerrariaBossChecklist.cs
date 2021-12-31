@@ -98,7 +98,7 @@ namespace LiveSplit.Terraria {
                 }
             }
 
-            if(!isHardmode && memory.IsHardmode.New) {
+            if(!isHardmode && (memory.IsHardmode?.New ?? false)) {
                 isHardmode = true;
                 CheckBoss("WallofFlesh");
             }
