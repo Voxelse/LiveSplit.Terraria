@@ -46,10 +46,10 @@ namespace LiveSplit.Terraria {
             IntPtr time = result[""]["updateTime"];
             IsGameMenu = ptrFactory.Make<bool>(game.Read<IntPtr>(time + 0x90));
 
-            Bosses = ptrFactory.Make<IntPtr>(time + 0x336);
-            IsHardmode = ptrFactory.Make<bool>(game.Read<IntPtr>(time + 0x346));
-            Inventory = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x36A), 0x8, 0xD0);
-            Npc = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x81A));
+            Bosses = ptrFactory.Make<IntPtr>(time + 0x353);
+            IsHardmode = ptrFactory.Make<bool>(game.Read<IntPtr>(time + 0x363));
+            Inventory = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x387), 0x8, 0xD0);
+            Npc = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x833));
 
             IsCrimson = ptrFactory.Make<bool>(game.Read<IntPtr>(result[""]["updateTimeDay"] + 0xD9));
 
