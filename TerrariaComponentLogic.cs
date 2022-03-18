@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveSplit.Terraria {
     public partial class TerrariaComponent {
 
-        private readonly HashSet<int> bossOffsets = new HashSet<int>();
+        private readonly HashSet<string> bossToCheck = new HashSet<string>();
         private bool needHardmodeSplit = false;
         private bool needCorruptionSplit = false;
         private bool needCrimsonSplit = false;
 
         private readonly HashSet<int> mechBossSplits = new HashSet<int>();
-        private readonly HashSet<int> mechBossOffsets = new HashSet<int>();
+        private readonly HashSet<string> mechBossToCheck = new HashSet<string>();
         private int mechBossKills = 0;
         
         private int allBossKills = 0;
@@ -18,27 +19,30 @@ namespace LiveSplit.Terraria {
 
         private bool needAllBossSplit = false;
         private bool trackHardmode = false;
-        private readonly HashSet<int> trackedBossOffsets = new HashSet<int>();
+        private readonly HashSet<string> trackedBossOffsets = new HashSet<string>();
 
         private readonly HashSet<int> itemIds = new HashSet<int>();
         
         private readonly HashSet<int> npcIds = new HashSet<int>();
 
         public override bool Update() {
+            if(!memory.Update()) {
+                return false;
+            }
             bossChecklist?.Update(memory);
-            return memory.Update();
+            return true;
         }
 
         public override bool Start() => memory.IsGameMenu.Old && !memory.IsGameMenu.New;
 
         public override void OnStart() {
-            bossOffsets.Clear();
+            bossToCheck.Clear();
             needHardmodeSplit = false;
             needCorruptionSplit = false;
             needCrimsonSplit = false;
             
             mechBossSplits.Clear();
-            mechBossOffsets.Clear();
+            mechBossToCheck.Clear();
             mechBossKills = 0;
             
             allBossKills = 0;
@@ -54,15 +58,15 @@ namespace LiveSplit.Terraria {
 
             foreach(string split in settings.Splits) {
                 if(split.StartsWith("Boss_")) {
-                    bossOffsets.Add((int)Enum.Parse(typeof(EBosses), split.Substring(5)));
+                    bossToCheck.Add(split.Substring(5));
                 } else if(split.StartsWith("Item_")) {
                     itemIds.Add((int)Enum.Parse(typeof(EItems), split.Substring(5)));
                 } else if(split.StartsWith("Npc_")) {
                     npcIds.Add((int)Enum.Parse(typeof(ENpcs), split.Substring(4)));
                 } else if(split.StartsWith("MechBoss_")) {
-                    mechBossOffsets.Add((int)EBosses.TheDestroyer);
-                    mechBossOffsets.Add((int)EBosses.TheTwins);
-                    mechBossOffsets.Add((int)EBosses.SkeletronPrime);
+                    mechBossToCheck.Add(EBosses.TheDestroyer.ToString());
+                    mechBossToCheck.Add(EBosses.TheTwins.ToString());
+                    mechBossToCheck.Add(EBosses.SkeletronPrime.ToString());
                     mechBossSplits.Add(split[split.Length - 1] - '0');
                 } else if(split.Equals("WallofFlesh")) {
                     needHardmodeSplit = true;
@@ -82,15 +86,15 @@ namespace LiveSplit.Terraria {
 
             if(needAllBossSplit) {
                 trackHardmode = !needHardmodeSplit;
-                foreach(EBosses boss in TerrariaEnums.AllBosses) {
-                    if(!bossOffsets.Contains((int)boss)
-                    && (boss != EBosses.EaterofWorldsBrainofCthulhu || (!needCorruptionSplit && !needCrimsonSplit))) {
-                        trackedBossOffsets.Add((int)boss);
+                foreach(string name in memory.Version.AllBosses()) {
+                    if(!bossToCheck.Contains(name)
+                    && (name != EBosses.EaterofWorldsBrainofCthulhu.ToString() || (!needCorruptionSplit && !needCrimsonSplit))) {
+                        trackedBossOffsets.Add(name);
                     }
                 }
             }
 
-            bossChecklist?.SetRunning(true);
+            bossChecklist?.SetRunning(true, memory.Version.AllBosses());
         }
 
         public override bool Split() {
@@ -100,18 +104,18 @@ namespace LiveSplit.Terraria {
                 return SplitBoss() || SplitWormOrBrain() || SplitWallOfFlesh() || SplitMech();
 
                 bool SplitBoss() {
-                    foreach(int offset in bossOffsets) {
-                        if(memory.IsBossBeaten(offset)) {
+                    foreach(string name in bossToCheck) {
+                        if(memory.IsBossBeaten(name)) {
                             IncreaseBossKills();
-                            logger.Log("Split Boss " + TerrariaEnums.BossName(offset));
-                            return bossOffsets.Remove(offset);
+                            logger.Log("Split Boss " + name);
+                            return bossToCheck.Remove(name);
                         }
                     }
-                    foreach(int offset in trackedBossOffsets) {
-                        if(memory.IsBossBeaten(offset)) {
+                    foreach(string name in trackedBossOffsets) {
+                        if(memory.IsBossBeaten(name)) {
                             IncreaseBossKills();
-                            trackedBossOffsets.Remove(offset);
-                            logger.Log("Track Boss " + TerrariaEnums.BossName(offset));
+                            trackedBossOffsets.Remove(name);
+                            logger.Log("Track Boss " + name);
                             return SplitAllBosses();
                         }
                     }
@@ -120,7 +124,7 @@ namespace LiveSplit.Terraria {
 
                 bool SplitWormOrBrain() {
                     if((needCorruptionSplit || needCrimsonSplit)
-                    && memory.IsBossBeaten((int)EBosses.EaterofWorldsBrainofCthulhu)) {
+                    && memory.IsBossBeaten(EBosses.EaterofWorldsBrainofCthulhu.ToString())) {
                         if(memory.IsCrimson.New) {
                             if(needCrimsonSplit) {
                                 IncreaseBossKills();
@@ -157,13 +161,13 @@ namespace LiveSplit.Terraria {
                 }
 
                 bool SplitMech() {
-                    foreach(int offset in mechBossOffsets) {
-                        bool isDown = memory.IsBossBeaten(offset);
-                        if(isDown && mechBossOffsets.Remove(offset) && mechBossSplits.Remove(++mechBossKills)) {
+                    foreach(string name in mechBossToCheck) {
+                        bool isDown = memory.IsBossBeaten(name);
+                        if(isDown && mechBossToCheck.Remove(name) && mechBossSplits.Remove(++mechBossKills)) {
                             if(mechBossSplits.Count == 0) {
-                                mechBossOffsets.Clear();
+                                mechBossToCheck.Clear();
                             }
-                            logger.Log("Split Mech Boss " + mechBossKills + " " + TerrariaEnums.BossName(offset));
+                            logger.Log("Split Mech Boss " + mechBossKills + " " + name);
                             return true;
                         }
                     }

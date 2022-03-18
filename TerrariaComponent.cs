@@ -25,6 +25,8 @@ namespace LiveSplit.Terraria {
         private BossChecklistData? bossChecklistData = null;
         private TerrariaBossChecklist bossChecklist;
 
+        private void OnVersionDetected(string version) => settings.SetGameVersion(version);
+
         public TerrariaComponent(LiveSplitState state) : base(state) {
             System.Diagnostics.Trace.WriteLine("cctor");
 #if DEBUG
@@ -35,6 +37,7 @@ namespace LiveSplit.Terraria {
             logger.StartLogger();
 
             memory = new TerrariaMemory(logger);
+            memory.OnVersionDetected += OnVersionDetected;
 
             settings = new TreeSettings(state, StartSettings, ResetSettings, OptionsSettings);
             settings.OptionChanged += OptionChanged;

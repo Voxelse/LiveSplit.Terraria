@@ -30,7 +30,7 @@ namespace LiveSplit.Terraria {
 
         private bool isRunning = false;
 
-        private HashSet<int> bossOffsets;
+        private HashSet<string> bossToCheck;
         private bool isHardmode;
 
         public TerrariaBossChecklist() {
@@ -79,10 +79,10 @@ namespace LiveSplit.Terraria {
             }
         }
 
-        public void SetRunning(bool value) {
+        public void SetRunning(bool value, IEnumerable<string> names = null) {
             isRunning = value;
             WebBrowser.Document.InvokeScript("resetBosses");
-            bossOffsets = new HashSet<int>(TerrariaEnums.AllBosses.Cast<int>());
+            bossToCheck = names == null ? new HashSet<string>() : new HashSet<string>(names);
             isHardmode = false;
         }
 
@@ -91,10 +91,11 @@ namespace LiveSplit.Terraria {
                 return;
             }
 
-            foreach(int offset in bossOffsets.ToArray()) {
-                if(memory.IsBossBeaten(offset)) {
-                    bossOffsets.Remove(offset);
-                    CheckBoss(TerrariaEnums.BossName(offset));
+            foreach(string name in bossToCheck) {
+                if(memory.IsBossBeaten(name)) {
+                    bossToCheck.Remove(name);
+                    CheckBoss(name);
+                    break;
                 }
             }
 

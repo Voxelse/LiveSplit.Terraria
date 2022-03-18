@@ -1,47 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace LiveSplit.Terraria {
 
     public static class TerrariaEnums {
-        public static string BossName(int value) => Enum.GetName(typeof(EBosses), value);
         public static string ItemName(int value) => Enum.GetName(typeof(EItems), value);
         public static string NpcName(int value) => Enum.GetName(typeof(ENpcs), value);
-
-        public static EBosses[] AllBosses {
-            get {
-                List<EBosses> bosses = new List<EBosses>();
-                foreach(EBosses boss in Enum.GetValues(typeof(EBosses))) {
-                    string name = boss.ToString();
-                    if(!name.StartsWith("_") && !name.EndsWith("Pillar")) {
-                        bosses.Add(boss);
-                    }
-                }
-                return bosses.ToArray();
-            }
-        }
     }
 
     public enum EBosses {
         //Wall of Flesh
-        EyeofCthulhu = -0x4,
+        EyeofCthulhu,
         EaterofWorldsBrainofCthulhu,
         Skeletron,
         QueenBee,
-        KingSlime = 0x0,
-        _GoblinArmy,//Event
-        _FrostLegion,//Event
-        _PirateInvasion,//Event
-        _SolarEclipse,//Event
+        KingSlime,
+        //_GoblinArmy,
+        //_FrostLegion,
+        //_PirateInvasion,
+        //_SolarEclipse,
         Plantera,
         Golem,
-        _MartianSaucer,//Event
+        //_MartianSaucer,
         DukeFishron,
-        _MourningWood,//Event
-        _Pumpking,//Event
-        _IceQueen,//Event
-        _Everscream,//Event
-        _SantaNK1,//Event
+        //_MourningWood,
+        //_Pumpking,
+        //_IceQueen,
+        //_Everscream,
+        //_SantaNK1,
         LunaticCultist,
         MoonLord,
         SolarPillar,
@@ -51,8 +36,7 @@ namespace LiveSplit.Terraria {
         EmpressofLight,
         QueenSlime,
         Deerclops,
-        //offset 6*1
-        TheDestroyer = 0x1D,
+        TheDestroyer,
         TheTwins,
         SkeletronPrime
     }

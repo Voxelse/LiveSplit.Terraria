@@ -17,19 +17,34 @@ namespace LiveSplit.Terraria {
         public Pointer<bool> IsHardmode { get; private set; }
         public Pointer<bool> IsCrimson { get; private set; }
 
+        public TerrariaVersion Version { get; private set; }
+        
         private ScanHelperTask scanTask;
 
-        private readonly ScannableData scanDict = new ScannableData {
+        private readonly ScannableData scanVerData = new ScannableData {
             {"", new Dictionary<string, ScanTarget> {
-                { "updateTime", new ScanTarget(0, "55 8B EC 57 56 83 EC ?? 8D 7D ?? B9 ???????? 33 C0 F3 AB 80 3D ???????? 00 75 ?? 0FB6") },
-                { "updateTimeDay", new ScanTarget(0, "55 8B EC 56 50 8B F1 33 D2") }
+                { "gameVer", new ScanTarget(2, "8B 05 ???????? 8D 15 ???????? E8 ???????? 8B 05 ???????? 8D 15 ???????? E8") {
+                    IsGoodMatch = (wrapper, ptr, ver) => {
+                        return wrapper.ReadString(wrapper.Read(ptr, 0x0, 0x0, 0x8), EStringType.AutoSized).StartsWith("v1.");
+                    }
+                } },
             }
         } };
 
         public TerrariaMemory(Logger logger) : base(logger) {
-            OnHook += () => {
+            OnHook += async () => {
                 scanTask = new ScanHelperTask(game, logger);
-                scanTask.Run(scanDict, (result) => OnScansDone(result));
+
+                await scanTask.Run(scanVerData, (resultVersion) => OnVersionFound(resultVersion));
+
+                ScannableData scanData = new ScannableData {
+                    {"", new Dictionary<string, ScanTarget> {
+                        { "updateTime", new ScanTarget(0, Version.Signature) },
+                        { "crimson", new ScanTarget(2, "80 3D ???????? 00 74 05 ?? 24000000") },
+                    }
+                } };
+
+                await scanTask.Run(scanData, (result) => OnScansDone(result));
             };
 
             OnExit += () => {
@@ -40,18 +55,25 @@ namespace LiveSplit.Terraria {
             };  
         }
 
+        private void OnVersionFound(Dictionary<string, Dictionary<string, IntPtr>> result) {
+            string stringVersion = game.ReadString(game.Read(result[""]["gameVer"], 0x0, 0x0, 0x8), EStringType.AutoSized);
+            logger.Log("Game version: " + stringVersion);
+            OnVersionDetected?.Invoke(stringVersion);
+            Version gameVersion = new Version(stringVersion.Substring(1, stringVersion.Length > 8 ? 7 : stringVersion.Length-1));
+            Version = TerrariaVersion.GetVersion(gameVersion);
+        }
+
         private void OnScansDone(Dictionary<string, Dictionary<string, IntPtr>> result) {
             NestedPointerFactory ptrFactory = new NestedPointerFactory(game);
 
             IntPtr time = result[""]["updateTime"];
-            IsGameMenu = ptrFactory.Make<bool>(game.Read<IntPtr>(time + 0x90));
+            IsGameMenu = ptrFactory.Make<bool>(game.Read<IntPtr>(time + Version.GameMenuAsmOffset));
+            Bosses = ptrFactory.Make<IntPtr>(time + Version.BossAsmOffset);
+            IsHardmode = ptrFactory.Make<bool>(game.Read<IntPtr>(time + Version.HardmodeAsmOffset));
+            Inventory = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + Version.PlayerAsmOffset), 0x8, Version.InventoryOffset);
+            Npc = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + Version.NpcAsmOffset));
 
-            Bosses = ptrFactory.Make<IntPtr>(time + 0x353);
-            IsHardmode = ptrFactory.Make<bool>(game.Read<IntPtr>(time + 0x363));
-            Inventory = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x387), 0x8, 0xD0);
-            Npc = ptrFactory.Make<IntPtr>(game.Read<IntPtr>(time + 0x833));
-
-            IsCrimson = ptrFactory.Make<bool>(game.Read<IntPtr>(result[""]["updateTimeDay"] + 0xD9));
+            IsCrimson = ptrFactory.Make<bool>(game.Read<IntPtr>(result[""]["crimson"]));
 
             logger.Log(ptrFactory.ToString());
 
@@ -60,26 +82,27 @@ namespace LiveSplit.Terraria {
 
         public override bool Update() => base.Update() && scanTask == null;
 
-        public bool IsBossBeaten(int offset) {
-            return Bosses != null && game.Read<bool>(Bosses.New + offset);
+        public bool IsBossBeaten(string name) {
+            return Bosses != null && Version != null && Version.BossLookup.TryGetValue(name, out int offset)
+                && game.Read<bool>(Bosses.New + offset);
         }
 
         public IEnumerable<int> ItemSequence() {
-            for(int i = 0; i < 60; i++) {
-                yield return game.Read<int>(game.Read<IntPtr>(Inventory.New + 0x8 + 0x4 * i) + 0x9C);
+            for(int i = 0; i < game.Read<int>(Inventory.New + 0x4); i++) {
+                yield return game.Read<int>(game.Read<IntPtr>(Inventory.New + 0x8 + 0x4 * i) + Version.InventoryTypeOffset);
             }
         }
 
         public IEnumerable<IntPtr> NpcSequence() {
-            for(int i = 0; i < 201; i++) {
+            for(int i = 0; i < game.Read<int>(Npc.New + 0x4); i++) {
                 yield return game.Read<IntPtr>(Npc.New + 0x8 + 0x4 * i);
             }
         }
         public bool NpcActive(IntPtr npcPtr) {
-            return game.Read<bool>(npcPtr + 0x20);
+            return game.Read<bool>(npcPtr + Version.NpcActiveOffset);
         }
         public int NpcType(IntPtr npcPtr) {
-            return game.Read<int>(npcPtr + 0xDC);
+            return game.Read<int>(npcPtr + Version.NpcTypeOffset);
         }
     }
 }
