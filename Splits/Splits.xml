@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Splits>
   <Parent name="Bosses" text="Bosses">
     <Split name="Boss_KingSlime" text="King Slime"/>
@@ -60,6 +60,8 @@
     <Split name="Item_1826" text="The Horseman's Blade"/>
     <Split name="Item_2880" text="Influx Waver"/>
     <Split name="Item_74" text="Platinum coin"/>
+    <Split name="Item_4276" text="Bast statue"/>
+    <Split name="Item_5334" text="Ocram's Razor"/>
   </Parent>
   <Parent name="Npcs" text="Npcs">
     <Split name="Npc_17" text="Merchant"/>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace LiveSplit.Terraria {
 
@@ -75,6 +75,8 @@ namespace LiveSplit.Terraria {
         GelatinCrystal = 4988,
         TorchGodsFavor = 5043,
         BeeHive = 5066,
+        BastStatue = 4276,
+        OcramsRazor = 5334
     }
 
     public enum ENpcs {
