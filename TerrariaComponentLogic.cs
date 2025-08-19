@@ -14,7 +14,11 @@ namespace LiveSplit.Terraria {
         private readonly HashSet<int> mechBossSplits = new HashSet<int>();
         private readonly HashSet<string> mechBossToCheck = new HashSet<string>();
         private int mechBossKills = 0;
-        
+
+        private readonly HashSet<int> pillarSplits = new HashSet<int>();
+        private readonly HashSet<string> pillarToCheck = new HashSet<string>();
+        private int pillarKills = 0;
+
         private int allBossKills = 0;
         private int IncreaseBossKills() => allBossKills++;
 
@@ -41,11 +45,15 @@ namespace LiveSplit.Terraria {
             needHardmodeSplit = false;
             needCorruptionSplit = false;
             needCrimsonSplit = false;
-            
+
             mechBossSplits.Clear();
             mechBossToCheck.Clear();
             mechBossKills = 0;
-            
+
+            pillarSplits.Clear();
+            pillarToCheck.Clear();
+            pillarKills = 0;
+
             allBossKills = 0;
             
             needAllBossSplit = false;
@@ -87,6 +95,12 @@ namespace LiveSplit.Terraria {
                     itemIds.Add((int)EItems.ShellphoneSpawn);
                     itemIds.Add((int)EItems.ShellphoneOcean);
                     itemIds.Add((int)EItems.ShellphoneHell);
+                } else if(split.Equals("All_Pillars_4")) {
+                    pillarToCheck.Add(EBosses.StardustPillar.ToString());
+                    pillarToCheck.Add(EBosses.VortexPillar.ToString());
+                    pillarToCheck.Add(EBosses.SolarPillar.ToString());
+                    pillarToCheck.Add(EBosses.NebulaPillar.ToString());
+                    pillarSplits.Add(split[split.Length - 1] - '0');
                 }
 
             }
@@ -108,7 +122,7 @@ namespace LiveSplit.Terraria {
             return !memory.IsGameMenu.New && (SplitBosses() || SplitItems() || SplitNpcs());
 
             bool SplitBosses() {
-                return SplitBoss() || SplitWormOrBrain() || SplitWallOfFlesh() || SplitMech();
+                return SplitBoss() || SplitWormOrBrain() || SplitWallOfFlesh() || SplitMech() || SplitPillar();
 
                 bool SplitBoss() {
                     foreach(string name in bossToCheck) {
@@ -175,6 +189,20 @@ namespace LiveSplit.Terraria {
                                 mechBossToCheck.Clear();
                             }
                             logger.Log("Split Mech Boss " + mechBossKills + " " + name);
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                bool SplitPillar() {
+                    foreach(string name in pillarToCheck) {
+                        bool isDown = memory.IsBossBeaten(name);
+                        if(isDown && pillarToCheck.Remove(name) && pillarSplits.Remove(++pillarKills)) {
+                            if(pillarSplits.Count == 0) {
+                                pillarToCheck.Clear();
+                            }
+                            logger.Log("Split Pillar Boss " + pillarKills + " " + name);
                             return true;
                         }
                     }

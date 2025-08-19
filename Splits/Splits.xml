@@ -26,6 +26,7 @@
     <Split name="Boss_SolarPillar" text="Solar Pillar"/>
     <Split name="Boss_StardustPillar" text="Stardust Pillar"/>
     <Split name="Boss_VortexPillar" text="Vortex Pillar"/>
+    <Split name="All_Pillars_4" text="All Pillars"/>
     <Split name="Boss_MoonLord" text="Moon Lord"/>
     <Split name="AllBosses" text="Beat all bosses (except Pillars and Events)"/>
   </Parent>
@@ -81,12 +82,12 @@
     <Split name="Item_648" text="RichMahoganyDresser"/>
     <Split name="Item_470" text="MushroomStatue"/>
     <Split name="Item_267" text="GuideVoodooDoll"/>
-    <Split name="Item_511" text="ActiveStoneBlock"/>  
-    <Split name="Item_512" text="InactiveStoneBlock"/>  
-    <Split name="Item_1343" text="FireGauntlet"/>  
-    <Split name="Item_1292" text="LihzahrdAltar"/>  
-    <Split name="Item_1294" text="Picksaw"/>  
-    <Split name="Item_650" text="EbonwoodDoor"/>  
+    <Split name="Item_511" text="ActiveStoneBlock"/>
+    <Split name="Item_512" text="InactiveStoneBlock"/>
+    <Split name="Item_1343" text="FireGauntlet"/>
+    <Split name="Item_1292" text="LihzahrdAltar"/>
+    <Split name="Item_1294" text="Picksaw"/>
+    <Split name="Item_650" text="EbonwoodDoor"/>
   </Parent>
   <Parent name="Npcs" text="Npcs">
     <Split name="Npc_17" text="Merchant"/>
