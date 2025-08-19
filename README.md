@@ -28,7 +28,10 @@ adds more items
 - lihzahrd altar
 - picksaw
 - ebonwood door
-  
+
+adds bosses
+- all pillars
+
 # Installation
 download livesplit.terraria.dll (in components folder
 insert file into components folder of livesplit 
