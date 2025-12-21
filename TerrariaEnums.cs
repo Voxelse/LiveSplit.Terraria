@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace LiveSplit.Terraria {
 
@@ -75,6 +76,36 @@ namespace LiveSplit.Terraria {
         GelatinCrystal = 4988,
         TorchGodsFavor = 5043,
         BeeHive = 5066,
+        BastStatue = 4276,
+        OcramsRazor = 5334,
+        PiggyBank = 87,
+        LesserManaPotion = 110,
+        ManaPotion = 189,
+        GreaterManaPotion = 500,
+        LavaBucket = 207,
+        SpecularFish = 2309,
+        SeafoodDinner = 4034,
+        Seedler = 3018,
+        SandstorminaBottle = 857,
+        FlyingCarpet = 934,
+        Obsidian = 173,
+        GlowingMushroom = 183,
+        DrillContainmentUnit = 2768,
+        Shellphone = 5358,
+        ShellphoneSpawn = 5359,
+        ShellphoneOcean = 5360,
+        ShellphoneHell = 5361,
+        CelestialSigil = 3601,
+        Glass = 170,
+        RichMahoganyDresser = 648,
+        MushroomStatue = 470,
+        GuideVoodooDoll = 267,
+        ActiveStoneBlock = 511,
+        InactiveStoneBlock = 512,
+        FireGauntlet = 1343,
+        LihzahrdAltar = 1292,
+        Picksaw = 1294,
+        EbonwoodDoor = 650
     }
 
     public enum ENpcs {

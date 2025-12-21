@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Splits>
   <Parent name="Bosses" text="Bosses">
     <Split name="Boss_KingSlime" text="King Slime"/>
@@ -26,6 +26,7 @@
     <Split name="Boss_SolarPillar" text="Solar Pillar"/>
     <Split name="Boss_StardustPillar" text="Stardust Pillar"/>
     <Split name="Boss_VortexPillar" text="Vortex Pillar"/>
+    <Split name="All_Pillars_4" text="All Pillars"/>
     <Split name="Boss_MoonLord" text="Moon Lord"/>
     <Split name="AllBosses" text="Beat all bosses (except Pillars and Events)"/>
   </Parent>
@@ -60,6 +61,33 @@
     <Split name="Item_1826" text="The Horseman's Blade"/>
     <Split name="Item_2880" text="Influx Waver"/>
     <Split name="Item_74" text="Platinum coin"/>
+    <Split name="Item_4276" text="Bast statue"/>
+    <Split name="Item_5334" text="Ocram's Razor"/>
+    <Split name="Item_87" text="Piggy Bank"/>
+    <Split name="Item_110" text="Lesser Mana Potion"/>
+    <Split name="Item_189" text="Mana Potion"/>
+    <Split name="Item_500" text="Greater Mana Potion"/>
+    <Split name="Item_207" text="Lava Bucket"/>
+    <Split name="Item_2309" text="Specular Fish"/>
+    <Split name="Item_4034" text="Seafood Dinner"/>
+    <Split name="Item_3018" text="Seedler"/>
+    <Split name="Item_857" text="SandstorminaBottle"/>
+    <Split name="Item_934" text="FlyingCarpet"/>
+    <Split name="Item_173" text="Obsidian"/>
+    <Split name="Item_183" text="GlowingMushroom"/>
+    <Split name="Item_2768" text="DrillContainmentUnit"/>
+    <Split name="Shellphone" text="Shellphone (Shellphone/ShellphoneSpawn/ShellphoneOcean/ShellphoneHell)"/>
+    <Split name="Item_3601" text="CelestialSigil"/>
+    <Split name="Item_170" text="Glass"/>
+    <Split name="Item_648" text="RichMahoganyDresser"/>
+    <Split name="Item_470" text="MushroomStatue"/>
+    <Split name="Item_267" text="GuideVoodooDoll"/>
+    <Split name="Item_511" text="ActiveStoneBlock"/>
+    <Split name="Item_512" text="InactiveStoneBlock"/>
+    <Split name="Item_1343" text="FireGauntlet"/>
+    <Split name="Item_1292" text="LihzahrdAltar"/>
+    <Split name="Item_1294" text="Picksaw"/>
+    <Split name="Item_650" text="EbonwoodDoor"/>
   </Parent>
   <Parent name="Npcs" text="Npcs">
     <Split name="Npc_17" text="Merchant"/>
