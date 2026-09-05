@@ -30,36 +30,36 @@
     <Split name="AllBosses" text="Beat all bosses (except Pillars and Events)"/>
   </Parent>
   <Parent name="Items" text="Items">
-    <Split name="Item_795" text="Blood Butcherer"/>
-    <Split name="Item_46" text="Light's Bane"/>
-    <Split name="Item_155" text="Muramasa"/>
-    <Split name="Item_190" text="Blade of Grass"/>
-    <Split name="Item_121" text="Fiery Greatsword"/>
-    <Split name="Item_273" text="Night's Edge"/>
-    <Split name="Item_757" text="Terra Blade"/>
-    <Split name="Item_4956" text="Zenith"/>
-    <Split name="Item_5043" text="Torch God's Favor"/>
-    <Split name="Item_224" text="Bed"/>
-    <Split name="Item_5066" text="Bee Hive"/>
+    <Split name="Item_BloodButcherer" text="Blood Butcherer"/>
+    <Split name="Item_LightsBane" text="Light's Bane"/>
+    <Split name="Item_Muramasa" text="Muramasa"/>
+    <Split name="Item_BladeofGrass" text="Blade of Grass"/>
+    <Split name="Item_FieryGreatsword" text="Fiery Greatsword"/>
+    <Split name="Item_NightsEdge" text="Night's Edge"/>
+    <Split name="Item_TerraBlade" text="Terra Blade"/>
+    <Split name="Item_Zenith" text="Zenith"/>
+    <Split name="Item_TorchGodsFavor" text="Torch God's Favor"/>
+    <Split name="Item_Bed" text="Bed"/>
+    <Split name="Item_BeeHive" text="Bee Hive"/>
     <Split name="Boots" text="Boots (Hermes/Dunerider/Flurry/Sailfish)"/>
-    <Split name="Item_4263" text="Magic Conch"/>
-    <Split name="Item_97" text="Musket Ball"/>
-    <Split name="Item_800" text="The Undertaker"/>
-    <Split name="Item_96" text="Musket"/>
-    <Split name="Item_168" text="Grenade"/>
-    <Split name="Item_4795" text="Goat Skull"/>
-    <Split name="Item_964" text="Boomstick"/>
-    <Split name="Item_534" text="Shotgun"/>
-    <Split name="Item_122" text="Molten Pickaxe"/>
-    <Split name="Item_1220" text="Orichalcum anvil"/>
-    <Split name="Item_525" text="Mythril anvil"/>
-    <Split name="Item_748" text="Jetpack"/>
-    <Split name="Item_1229" text="Chlorophyte Shotbow"/>
-    <Split name="Item_2673" text="Truffle worm"/>
-    <Split name="Item_4988" text="Gelatin crystal"/>
-    <Split name="Item_1826" text="The Horseman's Blade"/>
-    <Split name="Item_2880" text="Influx Waver"/>
-    <Split name="Item_74" text="Platinum coin"/>
+    <Split name="Item_MagicConch" text="Magic Conch"/>
+    <Split name="Item_MusketBall" text="Musket Ball"/>
+    <Split name="Item_TheUndertaker" text="The Undertaker"/>
+    <Split name="Item_Musket" text="Musket"/>
+    <Split name="Item_Grenade" text="Grenade"/>
+    <Split name="Item_WallOfFleshGoatMountItem" text="Goat Skull"/>
+    <Split name="Item_Boomstick" text="Boomstick"/>
+    <Split name="Item_Shotgun" text="Shotgun"/>
+    <Split name="Item_MoltenPickaxe" text="Molten Pickaxe"/>
+    <Split name="Item_OrichalcumAnvil" text="Orichalcum anvil"/>
+    <Split name="Item_MythrilAnvil" text="Mythril anvil"/>
+    <Split name="Item_Jetpack" text="Jetpack"/>
+    <Split name="Item_ChlorophyteShotbow" text="Chlorophyte Shotbow"/>
+    <Split name="Item_TruffleWorm" text="Truffle worm"/>
+    <Split name="Item_QueenSlimeCrystal" text="Gelatin crystal"/>
+    <Split name="Item_TheHorsemansBlade" text="The Horseman's Blade"/>
+    <Split name="Item_InfluxWaver" text="Influx Waver"/>
+    <Split name="Item_PlatinumCoin" text="Platinum coin"/>
   </Parent>
   <Parent name="Npcs" text="Npcs">
     <Split name="Npc_17" text="Merchant"/>

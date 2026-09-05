@@ -40,7 +40,7 @@ namespace LiveSplit.Terraria {
                 ScannableData scanData = new ScannableData {
                     {"", new Dictionary<string, ScanTarget> {
                         { "updateTime", new ScanTarget(0, Version.Signature) },
-                        { "crimson", new ScanTarget(2, "80 3D ???????? 00 74 05 ?? 24000000") },
+                        { "crimson", new ScanTarget(Version.CrimsonScanOffset, Version.CrimsonSignature) },
                     }
                 } };
 

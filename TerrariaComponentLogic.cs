@@ -76,9 +76,9 @@ namespace LiveSplit.Terraria {
                     needCrimsonSplit = true;
                 } else if(split.Equals("AllBosses")) {
                     needAllBossSplit = true;
-                } else if(split.Equals("Boots")) {
+                } else if(split.Equals("Boots")) { // Doing this elsewhere, keeping for now
                     itemIds.Add((int)EItems.HermesBoots);
-                    itemIds.Add((int)EItems.DuneriderBoots);
+                    itemIds.Add((int)EItems.SandBoots);
                     itemIds.Add((int)EItems.FlurryBoots);
                     itemIds.Add((int)EItems.SailfishBoots);
                 }
@@ -185,10 +185,10 @@ namespace LiveSplit.Terraria {
                 }
                 foreach(int type in memory.ItemSequence()) {
                     if(type != 0 && itemIds.Remove(type)) {
-                        if(type == (int)EItems.HermesBoots || type == (int)EItems.DuneriderBoots
-                        || type == (int)EItems.FlurryBoots || type == (int)EItems.SailfishBoots) {
+                        if(type == (int)EItems.HermesBoots || type == (int)EItems.SandBoots
+                        || type == (int)EItems.FlurryBoots || type == (int)EItems.SailfishBoots) { // Should only do this when "Boots" is used
                             itemIds.Remove((int)EItems.HermesBoots);
-                            itemIds.Remove((int)EItems.DuneriderBoots);
+                            itemIds.Remove((int)EItems.SandBoots);
                             itemIds.Remove((int)EItems.FlurryBoots);
                             itemIds.Remove((int)EItems.SailfishBoots);
                             logger.Log("Split Boots Item " + TerrariaEnums.ItemName(type));

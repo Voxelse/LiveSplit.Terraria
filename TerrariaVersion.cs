@@ -6,6 +6,8 @@ namespace LiveSplit.Terraria {
 
     public abstract class TerrariaVersion {
         public string Signature { get; protected set; }
+        public string CrimsonSignature { get; protected set; } = "80 3D ???????? 00 74 05 ?? 24000000"; // Terraria.WorldGen.AddShadowOrb
+        public int CrimsonScanOffset { get; protected set; } = 2;
 
         public Dictionary<string, int> BossLookup { get; protected set; }
 
@@ -28,7 +30,17 @@ namespace LiveSplit.Terraria {
 
         public static TerrariaVersion GetVersion(Version ver) {
             if(ver.Minor == 4) {
-                if(ver >= new Version(1, 4, 4, 8)) {
+                if(ver >= new Version(1, 4, 5, 7)) {
+                    return new TerrariaVersion_1_4_5_7();
+                } else if(ver >= new Version(1, 4, 5, 6)) {
+                    return new TerrariaVersion_1_4_5_6();
+                } else if(ver >= new Version(1, 4, 5, 4)) {
+                    return new TerrariaVersion_1_4_5_4();
+                } else if(ver >= new Version(1, 4, 5, 1)) {
+                    return new TerrariaVersion_1_4_5_1();
+                } else if(ver >= new Version(1, 4, 5, 0)) {
+                    return new TerrariaVersion_1_4_5_0();
+                } else if(ver >= new Version(1, 4, 4, 8)) {
                     return new TerrariaVersion_1_4_4_8();
                 } else if(ver >= new Version(1, 4, 4, 1)) {
                     return new TerrariaVersion_1_4_4_1();
@@ -580,5 +592,98 @@ namespace LiveSplit.Terraria {
                 NpcAsmOffset = 0x840;
             }
         }
+
+        private class TerrariaVersion_1_4_5_0 : TerrariaVersion_1_4_4_8 {
+            public TerrariaVersion_1_4_5_0() : base() {
+                BossAsmOffset = 0x46B;
+                HardmodeAsmOffset = 0x498;
+                PlayerAsmOffset = 0x824;
+                NpcAsmOffset = 0x95C;
+
+                InventoryTypeOffset = 0x4C;
+                NpcTypeOffset = 0xF0;
+                NpcActiveOffset = 0x184;
+
+                CrimsonSignature = "55 8BEC 83F9 1A 75 ?? 803D ???????? 00 75 ?? 33C0 5D C3 B8"; // Terraria.Recipe.GetRequiredTileStyle
+                CrimsonScanOffset = 0xA;
+            }
+        }
+
+        private class TerrariaVersion_1_4_5_1 : TerrariaVersion_1_4_5_0 { // 1.4.5.1 - 1.4.5.3
+            public TerrariaVersion_1_4_5_1() : base() {
+                NpcActiveOffset = 0x188;
+            }
+        }
+        private class TerrariaVersion_1_4_5_4 : TerrariaVersion_1_4_5_1 { // 1.4.5.4 - 1.4.5.5
+            public TerrariaVersion_1_4_5_4() : base() {
+                InventoryTypeOffset = 0x50;
+            }
+        }
+
+        private class TerrariaVersion_1_4_5_6 : TerrariaVersion_1_4_5_4 { // 1.4.5.6
+            public TerrariaVersion_1_4_5_6() : base() {
+                PlayerAsmOffset = 0x866;
+                InventoryOffset = 0xD4;
+                BossAsmOffset = 0x46C;
+                HardmodeAsmOffset = 0x4A9;
+                NpcAsmOffset = 0x991;
+                NpcTypeOffset = 0xF4;
+                NpcActiveOffset = 0x18C;
+            }
+        }
+
+        private class TerrariaVersion_1_4_5_7 : TerrariaVersion_1_4_5_6 { // 1.4.5.7 - 1.4.5.8
+            public TerrariaVersion_1_4_5_7() : base() {
+                Signature = "55 8B EC 57 56 53 83 EC ?? 8D 7D ?? B9 ???????? 33 C0 F3 AB 8D 4D ?? E8 ???????? 80 3D ???????? 00 75 ?? 0FB6";
+                GameMenuAsmOffset = 0x99;
+                BossAsmOffset = 0x47C;
+            }
+        }
+
+        /*
+            For anyone updating in the future:
+            Main.AnglerQuestSwap() provides needed BossAsmOffset and HardmodeAsmOffset easily
+            Offsets are relative to Main.UpdateTime()
+            Super easy way to update:
+            CE go to: Terraria.Main::AnglerQuestSwap
+            Will look something like this:
+            cmp byte ptr [051A6721],00
+            jne Terraria.Main::AnglerQuestSwap+5E
+            cmp byte ptr [051A6722],00
+            jne Terraria.Main::AnglerQuestSwap+5E
+            cmp byte ptr [051A6723],00
+            jne Terraria.Main::AnglerQuestSwap+5E
+            cmp byte ptr [051A6E58],00
+            jne Terraria.Main::AnglerQuestSwap+5E
+            cmp byte ptr [051A6725],00
+            jne Terraria.Main::AnglerQuestSwap+5E
+            movzx eax,byte ptr [051A6724]
+            Which maps to: bool flag = NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3 || hardMode || NPC.downedSlimeKing || NPC.downedQueenBee;
+                                        [051A6721]         [051A6722]         [051A6723]         [051A6E58]  [051A6725]             [051A6724]
+
+            Once you obtain hardMode offset and downedSlimeKing offset:
+            Go to: Terraria.Main::UpdateTime
+            Find where hardmode is used, for example 1.4.5.2:
+            Terraria.Main::UpdateTime+494 ... jmp Terraria.Main::UpdateTime+4B7
+            Terraria.Main::UpdateTime+496 ... cmp byte ptr[051A6E58],00 <-------- Main.hardMode, offset is 0x496, this is HardmodeAsmOffset
+            Terraria.Main::UpdateTime+49D ... je Terraria.Main::UpdateTime+4B7
+            Somewhere else in the function (usually a few instructions above), NPC.downedSlimeKing is used:
+            Terraria.Main::UpdateTime+465 ... cvttsd2si esi,xmm0
+            Terraria.Main::UpdateTime+469 ... cmp byte ptr [051A6725],00 <--------- NPC.downedSlimeKing, offset is 0x469, this is BossAsmOffset
+            Terraria.Main::UpdateTime+470 ... jne Terraria.Main::UpdateTime+496
+
+            In memory, the bosses look something like this:
+            public static bool downedBoss1 = false; // 051A6721 (downedSlimeKing - 4)
+            public static bool downedBoss2 = false; // 051A6722 (downedSlimeKing - 3)
+            public static bool downedBoss3 = false; // 051A6723 (downedSlimeKing - 2)
+            public static bool downedQueenBee = false; // 051A6724 (downedSlimeKing - 1)
+            public static bool downedSlimeKing = false; // 051A6725
+            public static bool downedGoblins = false; // 051A6726 (downedSlimeKing + 1)
+            public static bool downedFrost = false; // 051A6727 (downedSlimeKing + 2)
+
+            Which is where BossLookup comes from. Might have to check these manually, just decompile the game and find references to them + check offsets in CE
+
+            For finding Player, I found that the CollectTaxes() call is a good spot.
+        */
     }
 }

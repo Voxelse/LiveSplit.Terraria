@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LiveSplit.Terraria</RootNamespace>
     <AssemblyName>LiveSplit.Terraria</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -56,8 +56,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ItemSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="TerrariaComponent.cs" />
     <Compile Include="TerrariaComponentLogic.cs" />
+    <Compile Include="TerrariaSettings.cs" />
     <Compile Include="TerrariaVersion.cs" />
     <Compile Include="TerrariaMemory.cs" />
     <Compile Include="TerrariaEnums.cs" />

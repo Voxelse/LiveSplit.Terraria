@@ -1,6 +1,7 @@
 ﻿using LiveSplit.Model;
 using LiveSplit.UI.Components;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -14,7 +15,10 @@ namespace LiveSplit.Terraria {
         
         public enum EOption {
             [Description("Boss Checklist"), Type(typeof(OptionButton))]
-            BossChecklist
+            BossChecklist,
+
+            [Description("Add Item Split"), Type(typeof(OptionButton))]
+            AddItemSplit
         }
 
         protected override SettingsInfo? ResetSettings => null;
@@ -39,7 +43,7 @@ namespace LiveSplit.Terraria {
             memory = new TerrariaMemory(logger);
             memory.OnVersionDetected += OnVersionDetected;
 
-            settings = new TreeSettings(state, StartSettings, ResetSettings, OptionsSettings);
+            settings = new TerrariaSettings(state, StartSettings, ResetSettings, OptionsSettings);
             settings.OptionChanged += OptionChanged;
         }
 
@@ -89,6 +93,10 @@ namespace LiveSplit.Terraria {
                 case EOption.BossChecklist:
                     OpenBossChecklist();
                     break;
+
+                case EOption.AddItemSplit:
+                    OpenItemSelector();
+                    break;
             }
         }
 
@@ -105,6 +113,20 @@ namespace LiveSplit.Terraria {
                 bossChecklist.Show();
             } else {
                 bossChecklist.BringToFront();
+            }
+        }
+
+        private void OpenItemSelector() {
+            IWin32Window owner = settings.FindForm();
+
+            using(var itemForm = new ItemSelectorForm()) {
+                itemForm.TopMost = true;
+
+                if(itemForm.ShowDialog(owner) == DialogResult.OK) {
+                    List<string> selectedItems = itemForm.SelectedItemNames;
+                    var terrariaSettings = (TerrariaSettings)settings;
+                    terrariaSettings.AddItemSplits(selectedItems);
+                }
             }
         }
 
